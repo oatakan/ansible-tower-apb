@@ -1,0 +1,26 @@
+---
+namespace: "{{ lookup('env','NAMESPACE') | default('ansible-tower', true) }}"
+postgres_db: "{{ lookup('env','POSTGRES_DB') | default('awx', true) }}"
+postgres_user: "{{ lookup('env','POSTGRES_USER') | default('awx', true) }}"
+postgres_password: "{{ lookup('env','POSTGRES_PASSWORD') | default('password', true) }}"
+tower_admin_password: "{{ lookup('env','ADMIN_PASSWORD') | default('password', true) }}"
+tower_version: "{{ lookup('env','TOWER_VERSION') | default('3.1.4', true) }}"
+postgres_version: "{{ lookup('env','POSTGRES_VERSION') | default('9.6', true) }}"
+
+persistent_volume_claims:
+  - name: postgres-data
+    size: 60Gi
+    access_modes:
+      - ReadWriteMany
+    match_labels:
+      app: ansible-tower
+      pod: postgres-data
+      env: '{{ env | default("test") }}'
+  - name: tower-certs
+    size: 1Gi
+    access_modes:
+      - ReadOnlyMany
+    match_labels:
+      app: ansible-tower
+      pod: tower-certs
+      env: '{{ env | default("test") }}'

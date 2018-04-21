@@ -1,0 +1,20 @@
+---
+namespace: "{{ lookup('env','NAMESPACE') | default('ansible-tower', true) }}"
+
+persistent_volume_claims:
+  - name: postgres-data
+    size: 60Gi
+    access_modes:
+      - ReadWriteMany
+    match_labels:
+      app: ansible-tower
+      pod: postgres-data
+      env: '{{ env | default("test") }}'
+  - name: tower-certs
+    size: 1Gi
+    access_modes:
+      - ReadOnlyMany
+    match_labels:
+      app: ansible-tower
+      pod: tower-certs
+      env: '{{ env | default("test") }}'
